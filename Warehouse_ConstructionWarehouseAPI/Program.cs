@@ -1,18 +1,23 @@
-using Warehouse_ConstructionWarehouseAPI.Logging;
+using Microsoft.EntityFrameworkCore;
+using Warehouse_ConstructionWarehouseAPI;
+using Warehouse_ConstructionWarehouseAPI.Data;
+using Warehouse_ConstructionWarehouseAPI.Repository;
+using Warehouse_ConstructionWarehouseAPI.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
-//    .WriteTo.File("Log/Warehouse.txt", rollingInterval:RollingInterval.Day).CreateLogger();
-//builder.Host.UseSerilog();
-
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+});
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers(option => { /*option.ReturnHttpNotAcceptable = true;*/ }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ILogging, LoggingV2>();
 
 var app = builder.Build();
 

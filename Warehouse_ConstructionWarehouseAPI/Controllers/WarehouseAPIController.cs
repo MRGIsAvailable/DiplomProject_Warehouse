@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Warehouse_ConstructionWarehouseAPI.Data;
-using Warehouse_ConstructionWarehouseAPI.Logging;
 using Warehouse_ConstructionWarehouseAPI.Models;
 using Warehouse_ConstructionWarehouseAPI.Models.Dto;
+using Warehouse_ConstructionWarehouseAPI.Repository.IRepository;
 
 namespace Warehouse_ConstructionWarehouseAPI.Controllers
 {
@@ -11,122 +14,120 @@ namespace Warehouse_ConstructionWarehouseAPI.Controllers
     [ApiController]
     public class WarehouseAPIController : ControllerBase
     {
-        private readonly ILogging _logger;
-        public WarehouseAPIController(ILogging logger)
+        private readonly IProductRepository _dbProduct;
+        private readonly IMapper _mapper;
+        public WarehouseAPIController(IProductRepository dbProduct, IMapper mapper)
         {
-            _logger = logger;
+            _dbProduct = dbProduct;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<WarehouseDTO>> GetWarehouses()
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
         {
-            _logger.Log("Getting all warehouse", "");
-            return Ok(WarehouseStore.WarehouseList);
+            IEnumerable<Product> productList = await _dbProduct.GetAllAsync();
+
+            return Ok(_mapper.Map<List<ProductDTO>>(productList));
         }
 
-        [HttpGet("{id:int}", Name ="GetWarehouse")]
+        [HttpGet("{id:int}", Name ="GetProduct")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<WarehouseDTO> GetWarehouse(int id)
+        public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             if (id == 0)
             {
-                _logger.Log("Get Warehouse Error with Id" + id, "error");
                 return BadRequest();
             }
 
-            var Warehouse = WarehouseStore.WarehouseList.FirstOrDefault(u => u.Id == id);
-            if (Warehouse == null)
+            var product = await _dbProduct.GetAsync(u => u.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return Ok(WarehouseStore.WarehouseList.FirstOrDefault(u=>u.Id == id));
+            return Ok(_mapper.Map<ProductDTO>(product));
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<WarehouseDTO> CreateWarehouse([FromBody]WarehouseDTO warehouseDTO)
+        public async Task<ActionResult<ProductDTO>> CreateProduct([FromBody]ProductCreateDTO createDTO)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
-            if (WarehouseStore.WarehouseList.FirstOrDefault(u=>u.Name.ToLower() == warehouseDTO.Name.ToLower())!=null) //Уникальность имени
+            if (createDTO == null)
             {
-                ModelState.AddModelError("CustomError", "Warehouse already Exists!");
-                return BadRequest(ModelState);
+                return BadRequest(createDTO);
             }
 
-            if (warehouseDTO == null)
-            {
-                return BadRequest(warehouseDTO);
-            }
-            if (warehouseDTO.Id > 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-            warehouseDTO.Id = WarehouseStore.WarehouseList.OrderByDescending(u=>u.Id).FirstOrDefault().Id + 1;
-            WarehouseStore.WarehouseList.Add(warehouseDTO);
+            Product model = _mapper.Map<Product>(createDTO);
 
-            return CreatedAtRoute("GetWarehouse", new { id = warehouseDTO.Id }, warehouseDTO);
+            await _dbProduct.CreateAsync(model);
+
+            return CreatedAtRoute("GetProduct", new { id = model.Id }, model);
         }
 
-        [HttpDelete("{id:int}", Name = "DeleteWarehouse")]
+        [HttpDelete("{id:int}", Name = "DeleteProduct")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult DeleteWarehouse(int id)
+        public async Task<ActionResult> DeleteProduct(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
-            var warehouse = WarehouseStore.WarehouseList.FirstOrDefault(u=>u.Id == id);
-            if (warehouse == null)
+            var product = await _dbProduct.GetAsync(u => u.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
-            WarehouseStore.WarehouseList.Remove(warehouse);
+            await _dbProduct.RemoveAsync(product);
             return NoContent();
         }
 
-        [HttpPut("{id:int}", Name = "UpdateWarehouse")]
+        [HttpPut("{id:int}", Name = "UpdateProduct")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult UpdateWarehouse(int id, [FromBody]WarehouseDTO warehouseDTO)
+        public async Task<ActionResult> UpdateProduct(int id, [FromBody]ProductUpdateDTO updateDTO)
         {
-            if (warehouseDTO == null || id != warehouseDTO.Id)
+            if (updateDTO == null || id != updateDTO.Id)
             {
                 return BadRequest();
             }
-            var warehouse = WarehouseStore.WarehouseList.FirstOrDefault(u => u.Id == id);
-            warehouse.Name = warehouseDTO.Name;
-            warehouse.Sqft = warehouseDTO.Sqft;
-            warehouse.Occupancy = warehouseDTO.Occupancy;
+
+            Product model = _mapper.Map<Product>(updateDTO);
+
+            await _dbProduct.UpdateAsync(model);
 
             return NoContent();
         }
 
-        [HttpPatch("{id:int}", Name = "UpdatePartialWarehouse")]
+        [HttpPatch("{id:int}", Name = "UpdatePartialProduct")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult UpdatePartialWarehouse(int id, JsonPatchDocument<WarehouseDTO> patchDTO)
+        public async Task<ActionResult> UpdatePartialProduct(int id, JsonPatchDocument<ProductUpdateDTO> patchDTO)
         {
             if (patchDTO == null || id == 0)
             {
                 return BadRequest();
             }
-            var warehouse = WarehouseStore.WarehouseList.FirstOrDefault(u => u.Id == id);
-            if (warehouse == null)
+            var product = await _dbProduct.GetAsync(u => u.Id == id, tracked: false);
+
+            ProductUpdateDTO productDTO = _mapper.Map<ProductUpdateDTO>(product);
+
+            if (product == null)
             {
                 return BadRequest();
             }
-            patchDTO.ApplyTo(warehouse, ModelState);
+            patchDTO.ApplyTo(productDTO, ModelState);
+
+            Product model = _mapper.Map<Product>(productDTO);
+
+            await _dbProduct.UpdateAsync(model);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
