@@ -1,0 +1,75 @@
+﻿@model ConstructionWarehouse_Web.Models.VM.OrderDeleteVM
+
+<form asp-action="DeleteOrder">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Удаление</h1>
+        <hr />
+
+        <input hidden asp-for="Order.Id"/>
+        <div class="row">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="col-2">
+                <label asp-for="Order.ProductId" class="control-label pt-2" style="font-size: 20px;">Товар</label>
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="Order.ProductId" disabled class="form-select" asp-items="@Model.ProductList" style="width: 250px">
+                    <option disabled selected>--Выбрать товар--</option>
+                </select>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Order.Quantity" class="control-label pt-2" style="font-size: 20px;">Количество</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Order.Quantity" disabled class="from-control" min="1" />
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Order.CustomerId" class="control-label pt-2" style="font-size: 20px;">Менеджер</label>
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="Order.CustomerId" disabled class="form-select" asp-items="@Model.UserList" style="width: 250px">
+                    <option disabled selected>--Выбрать менеджера--</option>
+                </select>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Order.PremiseId" class="control-label pt-2" style="font-size: 20px;">Помещение</label>
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="Order.PremiseId" disabled class="form-select" asp-items="@Model.PremiseList" style="width: 250px">
+                    <option disabled selected>--Выбрать помещение--</option>
+                </select>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Order.Phone" class="control-label pt-2" style="font-size: 20px;">Телефон</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Order.Phone" disabled class="from-control" />
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Order.DeliveryStatusId" class="control-label pt-2" style="font-size: 20px;">Статус заказа</label>
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="Order.DeliveryStatusId" disabled class="form-select" asp-items="@Model.StatusList" style="width: 250px">
+                    <option disabled selected>--Выбрать статус--</option>
+                </select>
+            </div>
+
+            <div class="col-5 offset-2">
+                <a asp-action="IndexOrder" asp-controller="Order" class="btn-primary btn form-control">Назад</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Удалить" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

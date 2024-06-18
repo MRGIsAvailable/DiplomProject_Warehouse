@@ -1,0 +1,53 @@
+﻿@model ConstructionWarehouse_Web.Models.VM.InventoryUpdateVM
+
+<form asp-action="UpdateInventory">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Изменение</h1>
+        <hr />
+
+        <input hidden asp-for="Inventory.Id" />
+        <div class="row">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="col-2">
+                <label asp-for="Inventory.ProductId" class="control-label pt-2" style="font-size: 20px;">Товар</label>
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="Inventory.ProductId" class="form-select" asp-items="@Model.ProductList" style="width: 250px">
+                    <option disabled selected>--Выбрать товар--</option>
+                </select>
+                <span asp-validation-for="Inventory.ProductId" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Inventory.Quantity" class="control-label pt-2" style="font-size: 20px;">Количество</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Inventory.Quantity" class="from-control" min="1" />
+                <span asp-validation-for="Inventory.Quantity" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Inventory.PremiseId" class="control-label pt-2" style="font-size: 20px;">Помещение</label>
+            </div>
+            <div class="col-10 pb-3">
+                <select asp-for="Inventory.PremiseId" class="form-select" asp-items="@Model.PremiseList" style="width: 250px">
+                    <option disabled selected>--Выбрать помещение--</option>
+                </select>
+                <span asp-validation-for="Inventory.PremiseId" class="text-danger"></span>
+            </div>
+
+            <div class="col-5 offset-2">
+                <a asp-action="IndexInventory" asp-controller="Inventory" class="btn-primary btn form-control">Назад</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Обновить" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

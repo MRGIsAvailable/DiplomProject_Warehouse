@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ConstructionWarehouse_Web.Models.Dto.OrderDTO>
+<br />
+<div class="container p-4 border">
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Заказы</h1>
+        </div>
+        <div>
+            <form method="get">
+                <div class="form-inline form-group">
+                    <input name="search" class="form-control" placeholder="Поиск" style="width: 350px" />
+                    <br />
+                    <input type="submit" value="Поиск/отмена" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+        <div class="cool text-end pt-1">
+            <a asp-controller="Order" asp-action="CreateOrder" class="btn btn-outline-primary"><i class="bi bi-plus-square-fill"></i> Оформить заказ</a>
+            <a asp-controller="Order" asp-action="GeneratedPDF" class="btn btn-outline-primary"><i class="bi bi-plus-square-fill"></i> Сформировать PDF</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Товар
+                </th>
+                <th>
+                    Описание
+                </th>
+                <th>
+                    Количество
+                </th>
+                <th>
+                    Менеджер
+                </th>
+                <th>
+                    Помещение
+                </th>
+                <th>
+                    Телефон
+                </th>
+                <th>
+                    Дата создания
+                </th>
+                <th>
+                    Статус заказа
+                </th>
+                <th>
+                    Цена
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.Product.ProductName</td>
+                    <td>@item.Product.Details</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.User.FullName</td>
+                    <td>@item.Premise.PremiseName</td>
+                    <td>@item.Phone</td>
+                    <td>@((item.OrderDate).ToString("dd.MM.yyyy"))</td>
+                    <td>@item.Status.StatusName</td>
+                    <td>@((item.Product.Price).ToString("c"))</td>
+                    <td>
+                        <a asp-controller="Order" asp-action="UpdateOrder" asp-route-orderId="@item.Id" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                        <a asp-controller="Order" asp-action="DeleteOrder" asp-route-orderId="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>>

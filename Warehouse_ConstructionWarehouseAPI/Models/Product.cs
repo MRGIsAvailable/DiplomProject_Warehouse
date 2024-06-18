@@ -10,7 +10,9 @@ namespace Warehouse_ConstructionWarehouseAPI.Models
         public int Id { get; set; }
         public string ProductName { get; set; }
         public string Details { get; set; }
+        [ForeignKey("Category")]
         public int CategoryID { get; set; }
-        public string ImageUrl { get; set; }
+        public Category Category { get; set; }
+        public double Price { get; set; }
     }
 }

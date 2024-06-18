@@ -1,0 +1,56 @@
+﻿@model ConstructionWarehouse_Web.Models.Dto.SupplierCreateDTO
+
+<form asp-action="CreateSupplier">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Добавление производителя</h1>
+        <hr />
+
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="col-2">
+                <label asp-for="SupplierName" class="control-label pt-2" style="font-size: 20px;">Наименование</label>
+            </div>
+            <div class="col-10 pb-3">
+                <textarea asp-for="SupplierName" class="from-control" rows="1" style="width: 350px"></textarea>
+                <span asp-validation-for="SupplierName" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="ContactName" class="control-label pt-2" style="font-size: 20px;">Контактное лицо</label>
+            </div>
+            <div class="col-10 pb-3">
+                <textarea asp-for="ContactName" class="from-control" rows="1" style="width: 350px"></textarea>
+                <span asp-validation-for="ContactName" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Phone" class="control-label pt-2" style="font-size: 20px;">Телефон</label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Phone" class="from-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Email" class="control-label pt-2" style="font-size: 20px;">Адрес эл. почты</label>
+            </div>
+            <div class="col-10 pb-3">
+                <textarea asp-for="Email" class="from-control" rows="1" style="width: 350px"></textarea>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="col-5 offset-2">
+                <a asp-action="IndexSupplier" asp-controller="Supplier" class="btn-primary btn form-control">Назад</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Создать" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

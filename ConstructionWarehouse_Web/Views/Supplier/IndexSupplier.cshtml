@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ConstructionWarehouse_Web.Models.Dto.SupplierDTO>
+<br />
+<div class="container p-4 border">
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Производители</h1>
+        </div>
+        <div>
+            <form method="get">
+                <div class="form-inline form-group">
+                    <input name="search" class="form-control" placeholder="Поиск" style="width: 350px" />
+                    <br />
+                    <input type="submit" value="Поиск/отмена" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+        <div class="cool text-end pt-1">
+            <a asp-controller="Supplier" asp-action="CreateSupplier" class="btn btn-outline-primary"><i class="bi bi-plus-square-fill"></i> Добавить производителя</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Наименование
+                </th>
+                <th>
+                    Контактное лицо
+                </th>
+                <th>
+                    Телефон
+                </th>
+                <th>
+                    Адрес эл. почты
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SupplierName</td>
+                    <td>@item.ContactName</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Email</td>
+                    <td>
+                        <a asp-controller="Supplier" asp-action="UpdateSupplier" asp-route-supplierId="@item.Id" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                        <a asp-controller="Supplier" asp-action="DeleteSupplier" asp-route-supplierId="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>>

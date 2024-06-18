@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ConstructionWarehouse_Web.Models.Dto.ProductDTO>
+<br />
+<div class="container p-4 border">
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Список товаров</h1>
+        </div>
+        <div>
+            <form method="get">
+                <div class="form-inline form-group">
+                    <input name="search" class="form-control" placeholder="Поиск" style="width: 350px" />
+                    <br />
+                    <input type="submit" value="Поиск/отмена" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+        <div class="cool text-end pt-1">
+            <a asp-controller="Product" asp-action="CreateProduct" class="btn btn-outline-primary"><i class="bi bi-plus-square-fill"></i> Добавить новый товар в список</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Наименование
+                </th>
+                <th>
+                    Описание
+                </th>
+                <th>
+                    Категория
+                </th>
+                <th>
+                    Цена
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Details</td>
+                    <td>@item.Category.CategoryName</td>
+                    <td>@((item.Price).ToString("c"))</td>
+                    <td>
+                        <a asp-controller="Product" asp-action="UpdateProduct" asp-route-productId="@item.Id" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                        <a asp-controller="Product" asp-action="DeleteProduct" asp-route-productId="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>>
