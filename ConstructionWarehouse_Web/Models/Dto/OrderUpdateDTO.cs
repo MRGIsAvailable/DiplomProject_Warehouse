@@ -16,6 +16,7 @@ namespace ConstructionWarehouse_Web.Models.Dto
         public int PremiseId { get; set; }
         [Required]
         [MaxLength(12)]
+        [MinLength(12)]
         public string Phone { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }

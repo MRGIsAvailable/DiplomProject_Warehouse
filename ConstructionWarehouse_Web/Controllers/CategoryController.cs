@@ -5,6 +5,7 @@ using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Models.VM;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -20,6 +21,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _categoryService = categoryService;
             _mapper = mapper;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexCategory()
         {
             List<CategoryDTO> list = new();
@@ -33,12 +36,14 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreateCategory()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CategoryCreateDTO model)
         {
@@ -55,6 +60,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdateCategory(int categoryId)
         {
             var response = await _categoryService.GetAsync<APIResponse>(categoryId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -68,6 +74,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCategory(CategoryUpdateDTO model)
         {
@@ -84,6 +91,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteCategory(int categoryId)
         {
             var response = await _categoryService.GetAsync<APIResponse>(categoryId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -97,6 +105,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCategory(CategoryDTO model)
         {

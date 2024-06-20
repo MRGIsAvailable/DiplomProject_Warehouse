@@ -5,6 +5,7 @@ using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Models.VM;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -20,6 +21,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _premiseService = premiseService;
             _mapper = mapper;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexPremise()
         {
             List<PremiseDTO> list = new();
@@ -33,12 +36,14 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreatePremise()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePremise(PremiseCreateDTO model)
         {
@@ -55,6 +60,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdatePremise(int premiseId)
         {
             var response = await _premiseService.GetAsync<APIResponse>(premiseId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -68,6 +74,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdatePremise(PremiseUpdateDTO model)
         {
@@ -84,6 +91,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeletePremise(int premiseId)
         {
             var response = await _premiseService.GetAsync<APIResponse>(premiseId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -97,6 +105,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePremise(PremiseDTO model)
         {

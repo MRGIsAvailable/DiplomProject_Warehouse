@@ -73,7 +73,7 @@ namespace ConstructionWarehouse_Web.Controllers
         {
             await HttpContext.SignOutAsync();
             HttpContext.Session.SetString(StaticDetails.SessionToken, "");
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Auth");
         }
 
         public IActionResult AccessDenided()

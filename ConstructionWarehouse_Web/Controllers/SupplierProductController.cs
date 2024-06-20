@@ -5,6 +5,7 @@ using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Models.VM;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -24,6 +25,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _productService = productService;
             _supplierService = supplierService;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexSupplierProduct()
         {
             List<SupplierProductDTO> list = new();
@@ -37,6 +40,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreateSupplierProduct()
         {
             SupplierProductCreateVM supplierProductVM = new();
@@ -64,6 +68,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSupplierProduct(SupplierProductCreateVM model)
         {
@@ -108,6 +113,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdateSupplierProduct(int supplierProductId)
         {
             SupplierProductUpdateVM supplierProductVM = new();
@@ -144,6 +150,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateSupplierProduct(SupplierProductUpdateVM model)
         {
@@ -188,6 +195,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteSupplierProduct(int supplierProductId)
         {
             SupplierProductDeleteVM supplierProductVM = new();
@@ -224,6 +232,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSupplierProduct(SupplierProductDeleteVM model)
         {

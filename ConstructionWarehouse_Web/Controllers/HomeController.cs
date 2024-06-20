@@ -5,6 +5,7 @@ using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Models.VM;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -30,6 +31,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _statusService = statusService;
             _premiseService = premiseService;
         }
+
+        [Authorize]
         public async Task<IActionResult> Index(string? search)
         {
             IEnumerable<OrderDTO> list;

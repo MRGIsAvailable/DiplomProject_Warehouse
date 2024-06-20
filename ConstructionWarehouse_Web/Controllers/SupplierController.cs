@@ -5,6 +5,7 @@ using ConstructionWarehouse_Web.Models;
 using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -19,6 +20,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _supplierService = supplierService;
             _mapper = mapper;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexSupplier(string? search)
         {
             IEnumerable<SupplierDTO> list;
@@ -46,12 +49,14 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreateSupplier()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSupplier(SupplierCreateDTO model)
         {
@@ -68,6 +73,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdateSupplier(int supplierId)
         {
             var response = await _supplierService.GetAsync<APIResponse>(supplierId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -81,6 +87,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateSupplier(SupplierUpdateDTO model)
         {
@@ -97,6 +104,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteSupplier(int supplierId)
         {
             var response = await _supplierService.GetAsync<APIResponse>(supplierId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -110,6 +118,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSupplier(SupplierDTO model)
         {

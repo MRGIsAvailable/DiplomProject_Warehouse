@@ -5,6 +5,7 @@ using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Models.VM;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -24,6 +25,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _productService = productService;
             _premiseService = premiseService;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexInventory(string? search)
         {
             IEnumerable<InventoryDTO> list;
@@ -50,6 +53,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreateInventory()
         {
             InventoryCreateVM inventoryVM = new();
@@ -77,6 +81,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateInventory(InventoryCreateVM model)
         {
@@ -121,6 +126,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdateInventory(int inventoryId)
         {
             InventoryUpdateVM inventoryVM = new();
@@ -157,6 +163,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateInventory(InventoryUpdateVM model)
         {
@@ -201,6 +208,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteInventory(int inventoryId)
         {
             InventoryDeleteVM inventoryVM = new();
@@ -237,6 +245,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteInventory(InventoryDeleteVM model)
         {

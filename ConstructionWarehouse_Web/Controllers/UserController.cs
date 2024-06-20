@@ -4,6 +4,7 @@ using ConstructionWarehouse_Web.Models;
 using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -18,6 +19,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexUser(string? search)
         {
             IEnumerable<UserDTO> list;
@@ -44,12 +47,14 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreateUser()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(UserCreateDTO model)
         {
@@ -66,6 +71,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdateUser(int userId)
         {
             var response = await _userService.GetAsync<APIResponse>(userId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -79,6 +85,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUser(UserUpdateDTO model)
         {
@@ -95,6 +102,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
             var response = await _userService.GetAsync<APIResponse>(userId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -108,6 +116,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(UserDTO model)
         {

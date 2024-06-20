@@ -4,6 +4,7 @@ using ConstructionWarehouse_Web.Models;
 using ConstructionWarehouse_Web.Models.Dto;
 using ConstructionWarehouse_Web.Services;
 using ConstructionWarehouse_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -18,6 +19,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _statusService = statusService;
             _mapper = mapper;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexStatus()
         {
             List<StatusDTO> list = new();
@@ -31,12 +34,14 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreateStatus()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateStatus(StatusCreateDTO model)
         {
@@ -53,6 +58,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdateStatus(int statusId)
         {
             var response = await _statusService.GetAsync<APIResponse>(statusId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -66,6 +72,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(StatusUpdateDTO model)
         {
@@ -82,6 +89,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteStatus(int statusId)
         {
             var response = await _statusService.GetAsync<APIResponse>(statusId, HttpContext.Session.GetString(StaticDetails.SessionToken));
@@ -95,6 +103,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteStatus(StatusDTO model)
         {

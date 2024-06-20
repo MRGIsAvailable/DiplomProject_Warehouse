@@ -14,6 +14,7 @@ using PdfSharpCore;
 using PdfSharpCore.Pdf;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
 using System.Reflection.PortableExecutable;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ConstructionWarehouse_Web.Controllers
 {
@@ -34,6 +35,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _statusService = statusService;
             _premiseService = premiseService;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexOrder(string? search)
         {
             IEnumerable<OrderDTO> list;
@@ -61,6 +64,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> CreateOrder()
         {
             OrderCreateVM orderVM = new();
@@ -108,6 +112,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrder(OrderCreateVM model)
         {
@@ -172,6 +177,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> UpdateOrder(int orderId)
         {
             OrderUpdateVM orderVM = new();
@@ -228,6 +234,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateOrder(OrderUpdateVM model)
         {
@@ -292,6 +299,7 @@ namespace ConstructionWarehouse_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteOrder(int orderId)
         {
             OrderDeleteVM orderVM = new();
@@ -348,6 +356,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Администратор")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteOrder(OrderDeleteVM model)
         {
@@ -363,6 +372,7 @@ namespace ConstructionWarehouse_Web.Controllers
         }
 
         [HttpGet("generatepdf")]
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> GeneratedPDF()
         {
             var document = new PdfDocument();

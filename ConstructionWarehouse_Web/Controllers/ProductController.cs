@@ -23,6 +23,8 @@ namespace ConstructionWarehouse_Web.Controllers
             _mapper = mapper;
             _categoryService = categoryService;
         }
+
+        [Authorize]
         public async Task<IActionResult> IndexProduct(string? search)
         {
             IEnumerable<ProductDTO> list;
